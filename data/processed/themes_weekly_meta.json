@@ -1,0 +1,29 @@
+{
+  "phase": "phase_03_theme_grouping_claude",
+  "generated_at_utc": "2026-03-13T16:50:04.502064+00:00",
+  "input_csv": "data\\processed\\reviews_15w_redacted.csv",
+  "output_json": "data\\processed\\themes_weekly.json",
+  "assignments_csv": "data\\processed\\theme_assignments_sample_400.csv",
+  "config": {
+    "model": "claude-haiku-4-5",
+    "sample_size": 400,
+    "batch_size": 200,
+    "seed": 42
+  },
+  "sampling": {
+    "input_rows": 4036,
+    "sample_size_requested": 400,
+    "sample_size_used": 400,
+    "batch_size": 200,
+    "batches_used_for_claude": 2,
+    "seed": 42,
+    "used_claude": true
+  },
+  "theme_counts": {
+    "App Performance": 156,
+    "Trading Charges/Pricing": 34,
+    "Customer Support": 34,
+    "Features Performance": 157,
+    "KYC/Statements/Withdrawals": 19
+  }
+}

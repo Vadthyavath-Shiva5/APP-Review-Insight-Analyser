@@ -1,0 +1,518 @@
+{
+  "week_start": "2025-11-28",
+  "week_end": "2026-03-12",
+  "analysis_window_start": "2025-11-28",
+  "analysis_window_end": "2026-03-12",
+  "sampling": {
+    "input_rows": 4036,
+    "sample_size_requested": 400,
+    "sample_size_used": 400,
+    "batch_size": 200,
+    "batches_used_for_claude": 2,
+    "seed": 42,
+    "used_claude": true
+  },
+  "fixed_themes": [
+    "App Performance",
+    "Trading Charges/Pricing",
+    "Customer Support",
+    "Features Performance",
+    "KYC/Statements/Withdrawals"
+  ],
+  "themes": [
+    {
+      "name": "App Performance",
+      "count": 156,
+      "avg_rating": 3.53,
+      "summary": "156 sampled reviews mapped here (avg rating 3.53).",
+      "top_reviews": [
+        {
+          "rank": 1,
+          "review_id": "R303",
+          "rating": 1,
+          "date": "2026-03-11",
+          "priority_score": 99.71,
+          "text": "very bad from last 2 to 3 month mal function the software. and groww team is not accepting the things"
+        },
+        {
+          "rank": 2,
+          "review_id": "R344",
+          "rating": 1,
+          "date": "2026-03-11",
+          "priority_score": 99.71,
+          "text": "very low my amount in last 1 year , mid cap investment"
+        },
+        {
+          "rank": 3,
+          "review_id": "R118",
+          "rating": 1,
+          "date": "2026-03-10",
+          "priority_score": 99.42,
+          "text": "App lagging reflecting of latest SEBI guidelines."
+        },
+        {
+          "rank": 4,
+          "review_id": "R306",
+          "rating": 1,
+          "date": "2026-03-10",
+          "priority_score": 99.42,
+          "text": "bhai ye aap orders execution me farji karta h"
+        },
+        {
+          "rank": 5,
+          "review_id": "R096",
+          "rating": 1,
+          "date": "2026-03-09",
+          "priority_score": 99.13,
+          "text": "In this app, I often face technical errors when trying to exit the market, and because I\u2019m unable to exit on time, I end up incurring losses. I also have screenshots of the technical error, but there is no option to attach them here. otherwise, I would have attached them."
+        },
+        {
+          "rank": 6,
+          "review_id": "R166",
+          "rating": 1,
+          "date": "2026-03-05",
+          "priority_score": 97.98,
+          "text": "worse for scalper trade.while buying always stick at 5-10 percent above market price."
+        },
+        {
+          "rank": 7,
+          "review_id": "R142",
+          "rating": 1,
+          "date": "2026-03-04",
+          "priority_score": 97.69,
+          "text": "this app big scammer i requested please do not use"
+        },
+        {
+          "rank": 8,
+          "review_id": "R249",
+          "rating": 1,
+          "date": "2026-03-04",
+          "priority_score": 97.69,
+          "text": "Whenever I open app I have to login again, I don't know why I get logged out again and again. Frustrating."
+        },
+        {
+          "rank": 9,
+          "review_id": "R292",
+          "rating": 1,
+          "date": "2026-02-26",
+          "priority_score": 95.96,
+          "text": "I really don't know, why ur app show update on the time of trading. really disgusting. automatically it becomes slow. sometimes trade index chart freeze. i bought new phone and always update the apps. but the only ur app always create problem."
+        },
+        {
+          "rank": 10,
+          "review_id": "R049",
+          "rating": 1,
+          "date": "2026-02-25",
+          "priority_score": 95.67,
+          "text": "Many times I see digital manipulation at this place during exit profit convert in to loss."
+        }
+      ]
+    },
+    {
+      "name": "Trading Charges/Pricing",
+      "count": 34,
+      "avg_rating": 2.47,
+      "summary": "34 sampled reviews mapped here (avg rating 2.47).",
+      "top_reviews": [
+        {
+          "rank": 1,
+          "review_id": "R238",
+          "rating": 1,
+          "date": "2026-03-12",
+          "priority_score": 100.0,
+          "text": "wrost app brokerage is so high than others"
+        },
+        {
+          "rank": 2,
+          "review_id": "R171",
+          "rating": 1,
+          "date": "2026-03-11",
+          "priority_score": 99.71,
+          "text": "frud app hai charges pahle karleta hai aur profit jitna hai utna nhi bhejta mat dounload karo"
+        },
+        {
+          "rank": 3,
+          "review_id": "R083",
+          "rating": 1,
+          "date": "2026-03-10",
+          "priority_score": 99.42,
+          "text": "after using it for almost four years uninstalling it as it has started putting more extra charges along with brokerage shifting to dhan"
+        },
+        {
+          "rank": 4,
+          "review_id": "R231",
+          "rating": 1,
+          "date": "2026-03-10",
+          "priority_score": 99.42,
+          "text": "if u are small trader or invester I recommend never go on this platform they give to kuch charge which accumulated your profits."
+        },
+        {
+          "rank": 5,
+          "review_id": "R168",
+          "rating": 1,
+          "date": "2026-03-05",
+          "priority_score": 97.98,
+          "text": "Fraud App, Don't download They charges line creation charges every month from account as 599 rs + 18% GST, total 706 every month, complaint many times but no response from groww. Ticket No. 25114524"
+        },
+        {
+          "rank": 6,
+          "review_id": "R385",
+          "rating": 1,
+          "date": "2026-02-19",
+          "priority_score": 93.94,
+          "text": "APP BROKERAFE IS TOO HIGH AND MANY OTHER TAXES ARE DEDUCTED IN OPTION TRADING BUT IN EQITY LOT OF CHARGES ARE CHARGED BY THE NAME OF EXTRA CHARGES VERY BAD APP FOR TRADING AND INVESTING .THIS APP IS ONLY GOOD FOR MUTUAL FUNDS"
+        },
+        {
+          "rank": 7,
+          "review_id": "R365",
+          "rating": 1,
+          "date": "2026-02-17",
+          "priority_score": 93.37,
+          "text": "don't use this app if you are trader they have debit your little little amount you have no idea fraud company"
+        },
+        {
+          "rank": 8,
+          "review_id": "R308",
+          "rating": 1,
+          "date": "2026-02-11",
+          "priority_score": 91.63,
+          "text": "Groww app is not is good broker it's like a fake Breakers and we like to do when we take a by a cell he is take more money an establess should be 100 then its will be cut then to 120"
+        },
+        {
+          "rank": 9,
+          "review_id": "R224",
+          "rating": 1,
+          "date": "2026-02-09",
+          "priority_score": 91.06,
+          "text": "compare the price while equity purchase with in groww with kite there is a huge difference."
+        },
+        {
+          "rank": 10,
+          "review_id": "R207",
+          "rating": 1,
+          "date": "2026-02-04",
+          "priority_score": 89.62,
+          "text": "04/02/2026: Charged high brokarege & external charges also CDSL DP charges & charged Brokers dp charges on each trade trasanction daily.. .. 23/01//2024: App is not working properly, unable login through app or through website, suddenly in between working session any time it is off, no contact number, customer care not working, unable to contact any way to groww these are very worst case & very bad services."
+        }
+      ]
+    },
+    {
+      "name": "Customer Support",
+      "count": 34,
+      "avg_rating": 2.12,
+      "summary": "34 sampled reviews mapped here (avg rating 2.12).",
+      "top_reviews": [
+        {
+          "rank": 1,
+          "review_id": "R324",
+          "rating": 1,
+          "date": "2026-03-12",
+          "priority_score": 100.0,
+          "text": "Very poor, if you search for call or put option it will not show you near by expiry it will show you dec expiry, march last expiry, very poor support team, they will disconnect the call if you raise your issue."
+        },
+        {
+          "rank": 2,
+          "review_id": "R160",
+          "rating": 1,
+          "date": "2026-03-07",
+          "priority_score": 98.56,
+          "text": "poor customer service. despite customer service excepting glitch in their tool which impacted me to revise my orders and made loss, Customer service is not ready to compensate and gives a stupid response."
+        },
+        {
+          "rank": 3,
+          "review_id": "R052",
+          "rating": 1,
+          "date": "2026-02-25",
+          "priority_score": 95.67,
+          "text": "very worst customer support.. please don't use this rubbish App"
+        },
+        {
+          "rank": 4,
+          "review_id": "R138",
+          "rating": 1,
+          "date": "2026-02-24",
+          "priority_score": 95.38,
+          "text": "worst application for option trading..square off open positions in FnO section without client permission just for there brokerage...and 0 response from customer care team... useless app with useless customer support 0*... BIG BIG fraud application"
+        },
+        {
+          "rank": 5,
+          "review_id": "R209",
+          "rating": 1,
+          "date": "2026-02-18",
+          "priority_score": 93.65,
+          "text": "If you are looking for any worst trading the. it's GROWW, you never grow because of their mis calculation and margin frauds also let your wealth become zero and you never GROWW. hopeless customer service and features and just another fraud in the market."
+        },
+        {
+          "rank": 6,
+          "review_id": "R227",
+          "rating": 1,
+          "date": "2026-02-05",
+          "priority_score": 89.9,
+          "text": "No proper support from the customer care number. Calls go unanswered and there is no timely assistance"
+        },
+        {
+          "rank": 7,
+          "review_id": "R020",
+          "rating": 1,
+          "date": "2026-02-04",
+          "priority_score": 89.62,
+          "text": "totally failed customer support if u want to connect to helpline with call or chat no one is available for long time"
+        },
+        {
+          "rank": 8,
+          "review_id": "R175",
+          "rating": 1,
+          "date": "2026-02-04",
+          "priority_score": 89.62,
+          "text": "They have pathetic customer care service. I will not recommended."
+        },
+        {
+          "rank": 9,
+          "review_id": "R315",
+          "rating": 1,
+          "date": "2026-02-04",
+          "priority_score": 89.62,
+          "text": "customer support service is a very bad time increase in every minute"
+        },
+        {
+          "rank": 10,
+          "review_id": "R368",
+          "rating": 1,
+          "date": "2026-02-03",
+          "priority_score": 89.33,
+          "text": "zero star. customer care not at all responding"
+        }
+      ]
+    },
+    {
+      "name": "Features Performance",
+      "count": 157,
+      "avg_rating": 4.29,
+      "summary": "157 sampled reviews mapped here (avg rating 4.29).",
+      "top_reviews": [
+        {
+          "rank": 1,
+          "review_id": "R274",
+          "rating": 1,
+          "date": "2026-03-08",
+          "priority_score": 98.85,
+          "text": "where is the redeem option very bad"
+        },
+        {
+          "rank": 2,
+          "review_id": "R380",
+          "rating": 1,
+          "date": "2026-03-05",
+          "priority_score": 97.98,
+          "text": "unable to view external fund under mutual fund category."
+        },
+        {
+          "rank": 3,
+          "review_id": "R388",
+          "rating": 1,
+          "date": "2026-02-28",
+          "priority_score": 96.54,
+          "text": "Dear Groww team I'm groww customer since 2020 , I'll many time mentioned please provide layout features in groww mobile app but after so many reminders and email , I didn't find these features so I'll decided that move on dhan mobile app . Thank you..."
+        },
+        {
+          "rank": 4,
+          "review_id": "R355",
+          "rating": 1,
+          "date": "2026-02-27",
+          "priority_score": 96.25,
+          "text": "you must address aout trailing target and stop loss which is visible on chart,show live p&l."
+        },
+        {
+          "rank": 5,
+          "review_id": "R203",
+          "rating": 1,
+          "date": "2026-02-25",
+          "priority_score": 95.67,
+          "text": "intraday wala future Sahi Nahin Hai ismein why wala Sahi kijiye ismein Ek lot do lot wala system Jaise engine one Mein future hai aise hi feature Rahane chahie apps ke"
+        },
+        {
+          "rank": 6,
+          "review_id": "R237",
+          "rating": 1,
+          "date": "2026-02-22",
+          "priority_score": 94.81,
+          "text": "STP not available for SOA mutual funds"
+        },
+        {
+          "rank": 7,
+          "review_id": "R197",
+          "rating": 1,
+          "date": "2026-02-18",
+          "priority_score": 93.65,
+          "text": "Your mutual fund SIP investments are a scam. We don't get any single return on investment. It keeps on decreasing in value."
+        },
+        {
+          "rank": 8,
+          "review_id": "R085",
+          "rating": 1,
+          "date": "2026-02-12",
+          "priority_score": 91.92,
+          "text": "GTT orders view has become bad to worst with latest update on Feb 12 2026. I have been using the app for last 3 years. I am happy except one thing. I can not sort my GTT orders based some criteria like buy, sell, alphabetical, order price close to market price. I requested groww to enhance their app with these features to help customers make quick decisions. But no use, Groww does not understand customer needs. i have been waiting for this update since 2+years. is it so difficult."
+        },
+        {
+          "rank": 9,
+          "review_id": "R082",
+          "rating": 1,
+          "date": "2026-01-23",
+          "priority_score": 86.15,
+          "text": "You cannot pause your SIPs and they just cancel it if you skip it 3 times :)"
+        },
+        {
+          "rank": 10,
+          "review_id": "R074",
+          "rating": 1,
+          "date": "2026-01-21",
+          "priority_score": 85.58,
+          "text": "No daily SIP option .. Phonepay had even started the feature however Grow is lacking behind. Requesting you to please incorporate the Daily SIP option"
+        }
+      ]
+    },
+    {
+      "name": "KYC/Statements/Withdrawals",
+      "count": 19,
+      "avg_rating": 2.21,
+      "summary": "19 sampled reviews mapped here (avg rating 2.21).",
+      "top_reviews": [
+        {
+          "rank": 1,
+          "review_id": "R271",
+          "rating": 1,
+          "date": "2026-03-09",
+          "priority_score": 99.13,
+          "text": "worst app money stuck from last two weeks but issue not solved still wating"
+        },
+        {
+          "rank": 2,
+          "review_id": "R313",
+          "rating": 1,
+          "date": "2026-02-27",
+          "priority_score": 96.25,
+          "text": "if you r using groww for only mf don't upgrade to dmat. otherwise u will redeem your money only thg Grow. that fund's app redeem money more faster than grow. grow takes 2 day more time"
+        },
+        {
+          "rank": 3,
+          "review_id": "R114",
+          "rating": 1,
+          "date": "2026-02-21",
+          "priority_score": 94.52,
+          "text": "I have started option trading firstly I make 4000 profit on capital of 8000 but after I added 75000 I suffered huge loss of 28000 for recovery of this I again do option trading but I lose another 10000 I realised that if Market is bullish and I buy call option then immediately it becomes bearish Vice versa... I have buy 12 shares for 820 of bank of maharashtra and after 15 days I sale all but amount is neither credited to my demat account not saving account it's Fraud app please don't go for it"
+        },
+        {
+          "rank": 4,
+          "review_id": "R287",
+          "rating": 1,
+          "date": "2026-02-20",
+          "priority_score": 94.23,
+          "text": "my opinion the app is fraud @ we not withdraw our money in time @"
+        },
+        {
+          "rank": 5,
+          "review_id": "R230",
+          "rating": 1,
+          "date": "2026-02-17",
+          "priority_score": 93.37,
+          "text": "doesn't let you change phone number easily greedy buffaloes. have to courier form and all."
+        },
+        {
+          "rank": 6,
+          "review_id": "R034",
+          "rating": 1,
+          "date": "2026-02-12",
+          "priority_score": 91.92,
+          "text": "bakwaas app. zero \u2b50 to this app. Paisa deposit toh jldi ho jata hai. par apna Paisa withdrawal Krna ho toh ek din. shame on this kind of app. maha bekar app withdrawal Krna ho toh 2-3 din aur deposit sath ke sath. poor app. instant withdrawal kya bakwaas hai. ghatiya app sirf fees charge krte hai help koi nahi krte. instant withdrawal option shutdown kar do. ghatiya hi hai ab bhi."
+        },
+        {
+          "rank": 7,
+          "review_id": "R220",
+          "rating": 1,
+          "date": "2026-02-11",
+          "priority_score": 91.63,
+          "text": "Kya mujhe har bar kyc& nommine add kaise karna hai?Up Stox ko KYC dena hai kya?"
+        },
+        {
+          "rank": 8,
+          "review_id": "R112",
+          "rating": 1,
+          "date": "2026-02-05",
+          "priority_score": 89.9,
+          "text": "verry bad app my amount withdraw late"
+        },
+        {
+          "rank": 9,
+          "review_id": "R063",
+          "rating": 1,
+          "date": "2026-02-04",
+          "priority_score": 89.62,
+          "text": "very bad apps my many is not refund do not install this app frond apps"
+        },
+        {
+          "rank": 10,
+          "review_id": "R397",
+          "rating": 1,
+          "date": "2026-01-30",
+          "priority_score": 88.17,
+          "text": "They claim that they immediately send the withdrawn money to the bank. But today is the third day and they still haven't sent my withdrawn money to the bank.When I reported this , they said to wait for 1 day. I didn't expect this from Groww. fully bad experience"
+        }
+      ]
+    }
+  ],
+  "quotes": [
+    "very bad from last 2 to 3 month mal function the software. and groww team is not accepting the things",
+    "wrost app brokerage is so high than others",
+    "Very poor, if you search for call or put option it will not show you near by expiry it will show you dec expiry, march last expiry, very poor support team, they will disconnect the",
+    "where is the redeem option very bad",
+    "worst app money stuck from last two weeks but issue not solved still wating"
+  ],
+  "actionable_insight_candidates": [
+    {
+      "theme": "App Performance",
+      "insight": "Prioritize crash/latency fixes on critical journeys and add release-level performance telemetry.",
+      "supporting_review_ids": [
+        "R303",
+        "R344",
+        "R118"
+      ]
+    },
+    {
+      "theme": "Trading Charges/Pricing",
+      "insight": "Audit brokerage/charges communication and add transparent fee breakdowns before order confirmation.",
+      "supporting_review_ids": [
+        "R238",
+        "R171",
+        "R083"
+      ]
+    },
+    {
+      "theme": "Customer Support",
+      "insight": "Improve first-response SLA and reduce repeat-information loops with better ticket context carryover.",
+      "supporting_review_ids": [
+        "R324",
+        "R160",
+        "R052"
+      ]
+    },
+    {
+      "theme": "Features Performance",
+      "insight": "Stabilize high-usage features and add targeted QA checks for recurring functional regressions.",
+      "supporting_review_ids": [
+        "R274",
+        "R380",
+        "R388"
+      ]
+    },
+    {
+      "theme": "KYC/Statements/Withdrawals",
+      "insight": "Shorten KYC and withdrawal turnaround with proactive status updates and clearer failure reasons.",
+      "supporting_review_ids": [
+        "R271",
+        "R313",
+        "R114"
+      ]
+    }
+  ]
+}

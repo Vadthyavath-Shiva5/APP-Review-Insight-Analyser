@@ -1,0 +1,24 @@
+{
+  "app_id": "com.nextbillion.groww",
+  "weeks": 15,
+  "country": "in",
+  "lang": "en",
+  "min_words": 6,
+  "generated_at_utc": "2026-03-13T16:10:54.881053+00:00",
+  "output_csv": "data\\raw\\reviews_15w.csv",
+  "total_reviews_written": 4036,
+  "date_range": {
+    "min": "2025-11-28",
+    "max": "2026-03-12"
+  },
+  "stats": {
+    "seen_total": 26800,
+    "dropped_older_than_cutoff": 177,
+    "dropped_empty_text": 0,
+    "dropped_short_text": 22043,
+    "dropped_emoji": 501,
+    "dropped_repetitive": 39,
+    "dropped_duplicate": 4,
+    "kept": 4036
+  }
+}

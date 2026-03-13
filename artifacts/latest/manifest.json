@@ -1,0 +1,22 @@
+{
+  "created_at_utc": "2026-03-13T20:50:50+00:00",
+  "artifact_root": "artifacts\\latest",
+  "files_copied": [
+    "artifacts\\latest\\weekly_note.md",
+    "artifacts\\latest\\weekly_note.pdf",
+    "artifacts\\latest\\weekly_note_meta.json",
+    "artifacts\\latest\\email_draft.txt",
+    "artifacts\\latest\\email_draft_meta.json",
+    "artifacts\\latest\\themes_weekly.json",
+    "artifacts\\latest\\themes_weekly_meta.json",
+    "artifacts\\latest\\theme_assignments_sample_400.csv",
+    "artifacts\\latest\\reviews_sample_redacted.csv",
+    "artifacts\\latest\\latest_weekly_insights.pdf",
+    "artifacts\\latest\\latest_reviews_redacted.csv"
+  ],
+  "missing_sources": [
+    "data\\outputs\\pipeline_run_meta.json",
+    "data\\outputs\\pipeline_run_meta_scheduled.json"
+  ],
+  "review_sample_rows": 50
+}

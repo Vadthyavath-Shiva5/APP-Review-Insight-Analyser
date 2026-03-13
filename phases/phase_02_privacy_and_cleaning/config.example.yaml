@@ -1,0 +1,4 @@
+input: data/raw/reviews_15w.csv
+output: data/processed/reviews_15w_redacted.csv
+meta_output: data/processed/reviews_15w_redacted_meta.json
+min_words: 6

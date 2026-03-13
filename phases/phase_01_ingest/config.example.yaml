@@ -1,0 +1,8 @@
+app_id: com.nextbillion.groww
+playstore_url: https://play.google.com/store/apps/details?id=com.nextbillion.groww&hl=en-US
+weeks: 15
+country: in
+lang: en
+min_words: 6
+output: data/raw/reviews_15w.csv
+meta_output: data/raw/reviews_15w_meta.json

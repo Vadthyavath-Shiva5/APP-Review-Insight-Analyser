@@ -1,0 +1,16 @@
+{
+  "subject": "Weekly Review Insights - GROWW | 2026-03-12",
+  "week_end": "2026-03-12",
+  "to": "shivavadthyavath5@gmail.com",
+  "from": "shivavadthyavath5@gmail.com",
+  "used_gemini": true,
+  "model": "gemini-2.5-flash-lite",
+  "delivery_mode": "manual_cli",
+  "dry_run": false,
+  "attachments": [
+    "data\\outputs\\groww_weekly_insights_2026-03-12.pdf",
+    "data\\outputs\\groww_reviews_redacted_2026-03-12.csv"
+  ],
+  "app_link": "[Dashboard link to be added in Phase 7]",
+  "generation_mode": "strict_llm_only"
+}

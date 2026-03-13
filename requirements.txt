@@ -1,0 +1,9 @@
+anthropic>=0.45.0
+google-genai>=0.4.0
+google-play-scraper>=1.2.7
+pandas>=2.2.0
+python-dotenv>=1.0.1
+google-api-python-client>=2.165.0
+google-auth>=2.38.0
+reportlab>=4.2.0
+streamlit>=1.42.0

@@ -1,0 +1,12 @@
+{
+  "phase": "phase_04_weekly_note_gemini",
+  "generated_at_utc": "2026-03-13T17:57:12.289246+00:00",
+  "themes_input": "data\\processed\\themes_weekly.json",
+  "assignments_input": "data\\processed\\theme_assignments_sample_400.csv",
+  "output_note": "data\\outputs\\weekly_note.md",
+  "model": "gemini-2.5-flash-lite",
+  "used_gemini": true,
+  "sample_size": 400,
+  "word_count": 909,
+  "word_limit_applied": false
+}

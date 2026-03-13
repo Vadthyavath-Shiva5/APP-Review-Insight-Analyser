@@ -1,0 +1,22 @@
+{
+  "phase": "phase_02_privacy_and_cleaning",
+  "generated_at_utc": "2026-03-13T16:16:52.681417+00:00",
+  "input_csv": "data\\raw\\reviews_15w.csv",
+  "output_csv": "data\\processed\\reviews_15w_redacted.csv",
+  "min_words": 6,
+  "stats": {
+    "rows_input": 4036,
+    "rows_after_required_projection": 4036,
+    "dropped_empty_text": 0,
+    "dropped_short_text": 0,
+    "dropped_emoji": 0,
+    "dropped_repetitive": 0,
+    "dropped_invalid_date": 0,
+    "dropped_invalid_rating": 0,
+    "dropped_duplicates": 0,
+    "rows_output": 4036,
+    "pii_email_matches": 0,
+    "pii_phone_matches": 0,
+    "pii_id_matches": 0
+  }
+}

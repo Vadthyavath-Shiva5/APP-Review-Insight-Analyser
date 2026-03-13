@@ -1,0 +1,17 @@
+# Local secrets
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Local outputs
+*.log
+
+# Node / Next.js
+node_modules/
+.next/
+.vercel/
+
+.vercel

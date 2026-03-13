@@ -1,0 +1,10 @@
+input: data/processed/reviews_15w_redacted.csv
+output: data/processed/themes_weekly.json
+assignments_output: data/processed/theme_assignments_sample_400.csv
+meta_output: data/processed/themes_weekly_meta.json
+sample_size: 400
+batch_size: 200
+seed: 42
+model: claude-haiku-4-5
+
+

@@ -1,0 +1,101 @@
+﻿name: Weekly Backend Trigger
+
+on:
+  schedule:
+    # Monday 10:00 AM IST (UTC+05:30) = Monday 04:30 UTC
+    - cron: "30 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      weeks_from:
+        description: "From week (1..15)"
+        required: false
+        default: "1"
+      weeks_to:
+        description: "To week (1..15)"
+        required: false
+        default: "15"
+      recipient_email:
+        description: "Optional recipient for instant send"
+        required: false
+        default: ""
+      email_dry_run:
+        description: "Set true to generate draft only"
+        required: false
+        default: "false"
+
+jobs:
+  trigger-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate required secrets
+        env:
+          PIPELINE_TRIGGER_URL: ${{ secrets.PIPELINE_TRIGGER_URL }}
+          PIPELINE_TRIGGER_TOKEN: ${{ secrets.PIPELINE_TRIGGER_TOKEN }}
+        run: |
+          if [ -z "$PIPELINE_TRIGGER_URL" ]; then
+            echo "PIPELINE_TRIGGER_URL secret is missing." >&2
+            exit 1
+          fi
+          if [ -z "$PIPELINE_TRIGGER_TOKEN" ]; then
+            echo "PIPELINE_TRIGGER_TOKEN secret is missing." >&2
+            exit 1
+          fi
+
+      - name: Build payload
+        id: payload
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            WEEKS_FROM="${{ github.event.inputs.weeks_from }}"
+            WEEKS_TO="${{ github.event.inputs.weeks_to }}"
+            RECIPIENT_EMAIL="${{ github.event.inputs.recipient_email }}"
+            EMAIL_DRY_RUN="${{ github.event.inputs.email_dry_run }}"
+          else
+            WEEKS_FROM="1"
+            WEEKS_TO="15"
+            RECIPIENT_EMAIL=""
+            EMAIL_DRY_RUN="false"
+          fi
+
+          if [ -z "$WEEKS_FROM" ]; then WEEKS_FROM="1"; fi
+          if [ -z "$WEEKS_TO" ]; then WEEKS_TO="15"; fi
+          if [ -z "$EMAIL_DRY_RUN" ]; then EMAIL_DRY_RUN="false"; fi
+
+          PAYLOAD=$(jq -n \
+            --arg appId "com.nextbillion.groww" \
+            --argjson weeksFrom "$WEEKS_FROM" \
+            --argjson weeksTo "$WEEKS_TO" \
+            --arg recipientEmail "$RECIPIENT_EMAIL" \
+            --argjson emailDryRun "$EMAIL_DRY_RUN" \
+            '{
+              appId: $appId,
+              weeksFrom: $weeksFrom,
+              weeksTo: $weeksTo,
+              deliveryMode: (if $recipientEmail == "" then "scheduled_weekly" else "instant_frontend" end),
+              emailDryRun: $emailDryRun
+            } + (if $recipientEmail == "" then {} else {recipientEmail: $recipientEmail} end)')
+
+          echo "payload=$PAYLOAD" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger backend endpoint
+        env:
+          PIPELINE_TRIGGER_URL: ${{ secrets.PIPELINE_TRIGGER_URL }}
+          PIPELINE_TRIGGER_TOKEN: ${{ secrets.PIPELINE_TRIGGER_TOKEN }}
+          PAYLOAD: ${{ steps.payload.outputs.payload }}
+        run: |
+          echo "Sending payload to backend trigger..."
+          RESPONSE=$(curl -sS -X POST "$PIPELINE_TRIGGER_URL" \
+            -H "Authorization: Bearer $PIPELINE_TRIGGER_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" \
+            -w "\n%{http_code}")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP: $HTTP_CODE"
+          echo "$BODY"
+
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "Trigger failed." >&2
+            exit 1
+          fi
