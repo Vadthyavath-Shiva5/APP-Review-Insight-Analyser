@@ -88,6 +88,44 @@ def _gemini_bodies(note_text: str, model: str, app_link: str, attachment_line: s
     return plain_body, html_body
 
 
+def _fallback_bodies(note_text: str, app_link: str, attachment_line: str) -> tuple[str, str]:
+    snapshot_lines = [line.strip() for line in note_text.splitlines() if line.strip()][:10]
+    snapshot = "\n".join(snapshot_lines)
+
+    plain_body = (
+        "Hello Team,\n\n"
+        "This is your weekly one-page pulse from Groww Play Store reviews. "
+        "PDF and CSV are attached for reference.\n\n"
+        "TOP 5 THEMES THIS WEEK\n"
+        "Refer to the attached weekly note for theme summaries.\n\n"
+        "3 ACTION IDEAS\n"
+        "Refer to the attached weekly note for prioritized actions.\n\n"
+        "TOP 5 REVIEW HIGHLIGHTS\n"
+        "Refer to the attached weekly note for top review highlights by theme.\n\n"
+        "DATA and APPLICATION\n"
+        f"Application link: {app_link}\n"
+        f"Attachments: {attachment_line}\n\n"
+        + (f"Quick note snapshot:\n{snapshot}\n\n" if snapshot else "")
+        + "Best regards,\nVadthyavath Shiva\n\n"
+        "*This is an auto-generated mail.*"
+    )
+
+    html_body = (
+        "<p>Hello Team,</p>"
+        "<p>This is your weekly one-page pulse from Groww Play Store reviews. "
+        "PDF and CSV are attached for reference.</p>"
+        "<p><strong>TOP 5 THEMES THIS WEEK</strong><br/>Refer to the attached weekly note for theme summaries.</p>"
+        "<p><strong>3 ACTION IDEAS</strong><br/>Refer to the attached weekly note for prioritized actions.</p>"
+        "<p><strong>TOP 5 REVIEW HIGHLIGHTS</strong><br/>Refer to the attached weekly note for top review highlights by theme.</p>"
+        f"<p><strong>DATA and APPLICATION</strong><br/>Application link: {app_link}<br/>Attachments: {attachment_line}</p>"
+        + (f"<p><strong>Quick note snapshot</strong><br/>{snapshot.replace(chr(10), '<br/>')}</p>" if snapshot else "")
+        + "<p>Best regards,<br/>Vadthyavath Shiva</p>"
+        "<p><em>This is an auto-generated mail.</em></p>"
+    )
+
+    return plain_body, html_body
+
+
 def _guess_mime_type(path: Path) -> tuple[str, str]:
     suffix = path.suffix.lower()
     if suffix == ".pdf":
@@ -196,9 +234,6 @@ def run(
 ) -> None:
     load_dotenv()
 
-    if not os.getenv("GEMINI_API_KEY"):
-        raise ValueError("GEMINI_API_KEY is required for strict LLM email generation")
-
     note = note_input_path.read_text(encoding="utf-8")
     week_end = _extract_week_end(themes_json_path)
     subject = f"{BASE_SUBJECT} | {week_end}" if week_end else BASE_SUBJECT
@@ -211,12 +246,32 @@ def run(
     )
     attachment_line = f"{dated_pdf.name}, {dated_csv.name}"
 
-    body_text, body_html = _gemini_bodies(
-        note_text=note,
-        model=model,
-        app_link=app_link,
-        attachment_line=attachment_line,
-    )
+    used_gemini = False
+    generation_mode = "fallback_template"
+    if os.getenv("GEMINI_API_KEY"):
+        try:
+            body_text, body_html = _gemini_bodies(
+                note_text=note,
+                model=model,
+                app_link=app_link,
+                attachment_line=attachment_line,
+            )
+            used_gemini = True
+            generation_mode = "strict_llm_only"
+        except Exception as exc:  # noqa: BLE001
+            print(f"Gemini email generation failed, using fallback: {exc}")
+            body_text, body_html = _fallback_bodies(
+                note_text=note,
+                app_link=app_link,
+                attachment_line=attachment_line,
+            )
+    else:
+        print("GEMINI_API_KEY not set, using fallback email body.")
+        body_text, body_html = _fallback_bodies(
+            note_text=note,
+            app_link=app_link,
+            attachment_line=attachment_line,
+        )
 
     draft = f"Subject: {subject}\nTo: {to_alias}\n\n{body_text}"
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -270,13 +325,13 @@ def run(
         "week_end": week_end,
         "to": to_alias,
         "from": os.getenv("SMTP_USERNAME", ""),
-        "used_gemini": True,
+        "used_gemini": used_gemini,
         "model": model,
         "delivery_mode": delivery_mode,
         "dry_run": dry_run,
         "attachments": [str(dated_pdf), str(dated_csv)],
         "app_link": app_link,
-        "generation_mode": "strict_llm_only",
+        "generation_mode": generation_mode,
     }
     meta_path = output_path.with_name("email_draft_meta.json")
     meta_path.write_text(json.dumps(meta, indent=2), encoding="utf-8")
@@ -319,4 +374,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
 
