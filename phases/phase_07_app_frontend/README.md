@@ -1,4 +1,4 @@
-﻿# Phase 07 - Frontend Dashboard And Send Flow (Vercel-ready)
+# Phase 07 - Frontend Dashboard And Send Flow (Vercel-ready)
 
 Purpose: provide a Next.js dashboard UI for themes, insights, review evidence, and user-triggered email workflows.
 
@@ -28,7 +28,7 @@ Purpose: provide a Next.js dashboard UI for themes, insights, review evidence, a
 
 ## API Behavior
 - `/api/dashboard`: reads latest processed files and serves UI data.
-- `/api/send-email`: sends current generated email with latest PDF/CSV attachments via SMTP.
+- `/api/send-email`: sends current generated email with latest PDF/CSV attachments (Brevo / Resend / SMTP).
 - `/api/reprocess-and-send`:
   - On Vercel, calls external backend webhook (`PIPELINE_TRIGGER_URL`) to run Python pipeline and send mail.
   - Returns clear error if webhook is not configured.
@@ -40,11 +40,11 @@ Purpose: provide a Next.js dashboard UI for themes, insights, review evidence, a
 
 ## Deploy on Vercel
 Set env vars in Vercel project settings:
-- `EMAIL_PROVIDER` (`resend` recommended)
+- `EMAIL_PROVIDER` (`brevo` recommended for Render free tier)
 - `EMAIL_FROM_NAME`
 - `EMAIL_FROM_ADDRESS`
-- `RESEND_API_KEY`
-- `RESEND_FROM_EMAIL`
+- `BREVO_API_KEY`, `BREVO_FROM_EMAIL` or `EMAIL_FROM_ADDRESS` (when using Brevo)
+- `RESEND_API_KEY`, `RESEND_FROM_EMAIL` (when using Resend)
 - `EMAIL_TO_ALIAS` (optional default)
 - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USE_TLS`, `SMTP_USERNAME`, `SMTP_PASSWORD` (only if EMAIL_PROVIDER=smtp)
 - `PIPELINE_TRIGGER_URL` (required for week-range reprocess on Vercel)

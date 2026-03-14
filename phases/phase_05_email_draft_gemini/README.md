@@ -1,4 +1,4 @@
-﻿# Phase 05 - LLM Email Draft And Auto-Send
+# Phase 05 - LLM Email Draft And Auto-Send
 
 Purpose: generate and send a weekly insights email with LLM-first body generation.
 
@@ -28,12 +28,16 @@ Recipient modes:
 - `instant_frontend`: immediate send for frontend-entered recipient
 
 Required env for auto-send:
-- `EMAIL_PROVIDER` (`resend` recommended, or `smtp`)
+- `EMAIL_PROVIDER` (`brevo` recommended for Render free tier, or `resend`, or `smtp`)
 - `EMAIL_FROM_NAME`
-- `EMAIL_FROM_ADDRESS` (or `RESEND_FROM_EMAIL` / `SMTP_USERNAME`)
+- `EMAIL_FROM_ADDRESS` (or `BREVO_FROM_EMAIL` / `RESEND_FROM_EMAIL` / `SMTP_USERNAME`)
 - `PHASE7_APP_LINK`
 
-For Resend (recommended on Render free tier):
+For Brevo (recommended: HTTPS API, works on Render free tier; personal mail OK):
+- `BREVO_API_KEY`
+- `EMAIL_FROM_ADDRESS` or `BREVO_FROM_EMAIL` (verified sender in Brevo)
+
+For Resend (requires verified domain):
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
 

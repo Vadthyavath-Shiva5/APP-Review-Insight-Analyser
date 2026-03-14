@@ -1,4 +1,4 @@
-﻿# Render Backend
+# Render Backend
 
 This backend runs the weekly pipeline and exposes HTTP endpoints for Vercel + GitHub Actions.
 
@@ -36,15 +36,22 @@ Then call `POST /trigger` with:
 
 ## Email Transport on Render
 
-Use HTTPS email API for Render free tier.
-Recommended:
+Use an HTTPS email API on Render free tier (SMTP is not supported).
+
+**Brevo (recommended)** – works with personal mail, no domain required:
+- `EMAIL_PROVIDER=brevo`
+- `BREVO_API_KEY=...` (from Brevo → SMTP & API → API Keys)
+- `EMAIL_FROM_ADDRESS=your_personal@gmail.com` (or `BREVO_FROM_EMAIL=...`) – use a verified sender in Brevo
+- `EMAIL_FROM_NAME=Groww Pulse Bot`
+
+**Resend** – requires a verified domain:
 - `EMAIL_PROVIDER=resend`
 - `RESEND_API_KEY=...`
 - `RESEND_FROM_EMAIL=verified@yourdomain.com`
 - `EMAIL_FROM_NAME=Groww Pulse Bot`
 - `EMAIL_FROM_ADDRESS=verified@yourdomain.com`
 
-SMTP is optional fallback (`EMAIL_PROVIDER=smtp`) but may fail on Render free due to outbound SMTP restrictions.
+SMTP (`EMAIL_PROVIDER=smtp`) is optional but typically blocked on Render free tier.
 
 ## Run Locally
 

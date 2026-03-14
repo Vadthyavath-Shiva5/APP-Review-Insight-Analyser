@@ -1,4 +1,4 @@
-﻿import nodemailer from "nodemailer";
+import nodemailer from "nodemailer";
 import { promises as fs } from "fs";
 import { NextResponse } from "next/server";
 
@@ -65,6 +65,46 @@ async function sendViaResend({ apiKey, fromName, fromEmail, toEmail, subject, bo
   return parsed;
 }
 
+async function sendViaBrevo({ apiKey, fromName, fromEmail, toEmail, subject, bodyText, bodyHtml, attachments }) {
+  const brevoAttachments = await Promise.all(
+    attachments.map(async (item) => {
+      const bytes = await fs.readFile(item.path);
+      return { name: item.filename, content: Buffer.from(bytes).toString("base64") };
+    })
+  );
+
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": apiKey,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      sender: { name: fromName, email: fromEmail },
+      to: [{ email: toEmail }],
+      subject,
+      htmlContent: bodyHtml,
+      textContent: bodyText,
+      attachment: brevoAttachments,
+    }),
+    cache: "no-store",
+  });
+
+  const raw = await response.text();
+  let parsed = {};
+  try {
+    parsed = raw ? JSON.parse(raw) : {};
+  } catch {
+    parsed = { raw };
+  }
+
+  if (!response.ok) {
+    throw new Error(`Brevo send failed (${response.status}): ${JSON.stringify(parsed)}`);
+  }
+
+  return parsed;
+}
+
 async function sendViaSmtp({
   host,
   port,
@@ -107,13 +147,18 @@ export async function POST(req) {
       return NextResponse.json({ ok: false, error: "Valid recipient email is required." }, { status: 400 });
     }
 
-    const emailProvider = String(process.env.EMAIL_PROVIDER || "resend").toLowerCase();
+    const emailProvider = String(process.env.EMAIL_PROVIDER || "brevo").toLowerCase();
     const fromName = process.env.EMAIL_FROM_NAME || "GROWW Pulse Bot";
-    const fromEmail = process.env.EMAIL_FROM_ADDRESS || process.env.RESEND_FROM_EMAIL || process.env.SMTP_USERNAME || "";
+    const fromEmail =
+      process.env.EMAIL_FROM_ADDRESS ||
+      process.env.RESEND_FROM_EMAIL ||
+      process.env.BREVO_FROM_EMAIL ||
+      process.env.SMTP_USERNAME ||
+      "";
 
     if (!fromEmail) {
       return NextResponse.json(
-        { ok: false, error: "Set EMAIL_FROM_ADDRESS or RESEND_FROM_EMAIL or SMTP_USERNAME." },
+        { ok: false, error: "Set EMAIL_FROM_ADDRESS or RESEND_FROM_EMAIL or BREVO_FROM_EMAIL or SMTP_USERNAME." },
         { status: 400 },
       );
     }
@@ -125,6 +170,32 @@ export async function POST(req) {
     const attachments = [];
     if (pdfPath && pdfName) attachments.push({ filename: pdfName, path: pdfPath });
     if (csvPath && csvName) attachments.push({ filename: csvName, path: csvPath });
+
+    if (emailProvider === "brevo") {
+      const brevoApiKey = process.env.BREVO_API_KEY || "";
+      if (!brevoApiKey) {
+        return NextResponse.json({ ok: false, error: "BREVO_API_KEY must be configured." }, { status: 400 });
+      }
+
+      const brevoResult = await sendViaBrevo({
+        apiKey: brevoApiKey,
+        fromName,
+        fromEmail,
+        toEmail: recipientEmail,
+        subject,
+        bodyText: body,
+        bodyHtml,
+        attachments,
+      });
+
+      return NextResponse.json({
+        ok: true,
+        message: `Email sent to ${recipientEmail}`,
+        provider: "brevo",
+        providerMessageId: brevoResult?.messageId || null,
+        attachments: attachments.map((a) => a.filename),
+      });
+    }
 
     if (emailProvider === "resend") {
       const resendApiKey = process.env.RESEND_API_KEY || "";
@@ -188,7 +259,7 @@ export async function POST(req) {
     }
 
     return NextResponse.json(
-      { ok: false, error: "EMAIL_PROVIDER must be either 'resend' or 'smtp'." },
+      { ok: false, error: "EMAIL_PROVIDER must be one of: 'brevo', 'resend', 'smtp'." },
       { status: 400 },
     );
   } catch (error) {

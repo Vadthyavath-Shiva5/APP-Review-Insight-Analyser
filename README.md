@@ -1,4 +1,4 @@
-﻿# GROWW Review Insight Analyzer
+# GROWW Review Insight Analyzer
 
 Phase-wise architecture and implementation scaffold to convert recent GROWW Play Store reviews into a weekly one-page pulse for Product, Growth, Support, and Leadership teams.
 
@@ -287,7 +287,7 @@ Planned upgrades for production deployment:
 
 - Weekly triggered mail uses only WEEKLY_SCHEDULED_RECIPIENT from .env.
 - Frontend-entered recipient emails are sent instantly and are not stored for weekly triggers.
-- Sender is configured by EMAIL_FROM_ADDRESS / RESEND_FROM_EMAIL and EMAIL_FROM_NAME.
+- Sender is configured by EMAIL_FROM_ADDRESS / BREVO_FROM_EMAIL / RESEND_FROM_EMAIL and EMAIL_FROM_NAME.
 
 ## Weekly Schedule Setup (Monday 10:00)
 
@@ -310,8 +310,9 @@ Planned upgrades for production deployment:
   - `npm run dev`
 - Deploy to Vercel from repository root.
 - Required Vercel env vars:
-  - `EMAIL_PROVIDER` (`resend` recommended)
+  - `EMAIL_PROVIDER` (`brevo` recommended for Render free tier)
   - `EMAIL_FROM_NAME`, `EMAIL_FROM_ADDRESS`
+  - `BREVO_API_KEY`, `BREVO_FROM_EMAIL` or `EMAIL_FROM_ADDRESS` (when using Brevo)
   - `RESEND_API_KEY`, `RESEND_FROM_EMAIL` (when using Resend)
   - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USE_TLS`, `SMTP_USERNAME`, `SMTP_PASSWORD` (only if EMAIL_PROVIDER=smtp)
   - `EMAIL_TO_ALIAS` (optional default recipient)

@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import argparse
 import base64
@@ -221,6 +221,55 @@ def _send_via_resend(
         raise RuntimeError(f"Resend request failed: {exc.reason}") from exc
 
 
+def _send_via_brevo(
+    api_key: str,
+    from_email: str,
+    from_name: str,
+    to_email: str,
+    subject: str,
+    body_text: str,
+    body_html: str,
+    attachment_paths: list[Path],
+) -> str | None:
+    """Send email via Brevo (HTTPS API). Works on Render free tier; sender can be personal mail."""
+    attachments = []
+    for path in attachment_paths:
+        if not path.exists():
+            raise FileNotFoundError(f"Attachment not found: {path}")
+        encoded = base64.b64encode(path.read_bytes()).decode("ascii")
+        attachments.append({"name": path.name, "content": encoded})
+
+    payload = {
+        "sender": {"name": from_name, "email": from_email},
+        "to": [{"email": to_email}],
+        "subject": subject,
+        "htmlContent": body_html,
+        "textContent": body_text,
+        "attachment": attachments,
+    }
+
+    req = urllib.request.Request(
+        url="https://api.brevo.com/v3/smtp/email",
+        data=json.dumps(payload).encode("utf-8"),
+        method="POST",
+        headers={
+            "api-key": api_key,
+            "Content-Type": "application/json",
+        },
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            raw = resp.read().decode("utf-8", errors="replace")
+            parsed = json.loads(raw) if raw else {}
+            return parsed.get("messageId")
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"Brevo API error {exc.code}: {detail}") from exc
+    except urllib.error.URLError as exc:
+        raise RuntimeError(f"Brevo request failed: {exc.reason}") from exc
+
+
 def _as_bool(value: str | None, default: bool = True) -> bool:
     if value is None:
         return default
@@ -329,11 +378,12 @@ def run(
     output_path.write_text(draft, encoding="utf-8")
     print(f"Saved email draft to {output_path}")
 
-    email_provider = os.getenv("EMAIL_PROVIDER", "resend").strip().lower()
+    email_provider = os.getenv("EMAIL_PROVIDER", "brevo").strip().lower()
     from_name = os.getenv("EMAIL_FROM_NAME", "Vadthyavath Shiva").strip() or "Vadthyavath Shiva"
     from_email = (
         os.getenv("EMAIL_FROM_ADDRESS", "").strip()
         or os.getenv("RESEND_FROM_EMAIL", "").strip()
+        or os.getenv("BREVO_FROM_EMAIL", "").strip()
         or os.getenv("SMTP_USERNAME", "").strip()
     )
 
@@ -344,6 +394,7 @@ def run(
     smtp_use_tls = _as_bool(os.getenv("SMTP_USE_TLS", "true"), default=True)
 
     resend_api_key = os.getenv("RESEND_API_KEY", "").strip()
+    brevo_api_key = os.getenv("BREVO_API_KEY", "").strip()
 
     if dry_run:
         print("Dry run enabled. Email not sent.")
@@ -353,9 +404,27 @@ def run(
         if not to_alias:
             raise ValueError("Recipient email missing. Set EMAIL_TO_ALIAS or pass --to")
         if not from_email:
-            raise ValueError("Sender email missing. Set EMAIL_FROM_ADDRESS or RESEND_FROM_EMAIL or SMTP_USERNAME")
+            raise ValueError(
+                "Sender email missing. Set EMAIL_FROM_ADDRESS or RESEND_FROM_EMAIL or BREVO_FROM_EMAIL or SMTP_USERNAME"
+            )
 
-        if email_provider == "resend":
+        if email_provider == "brevo":
+            if not brevo_api_key:
+                raise ValueError("BREVO_API_KEY is required when EMAIL_PROVIDER=brevo")
+            message_id = _send_via_brevo(
+                api_key=brevo_api_key,
+                from_email=from_email,
+                from_name=from_name,
+                to_email=to_alias,
+                subject=subject,
+                body_text=body_text,
+                body_html=body_html,
+                attachment_paths=[dated_pdf, dated_csv],
+            )
+            print(f"Email sent via Brevo to {to_alias}. message_id={message_id}")
+            transport_used = "brevo"
+            transport_status = "sent"
+        elif email_provider == "resend":
             if not resend_api_key:
                 raise ValueError("RESEND_API_KEY is required when EMAIL_PROVIDER=resend")
             message_id = _send_via_resend(
@@ -401,7 +470,7 @@ def run(
             transport_used = "smtp"
             transport_status = "sent"
         else:
-            raise ValueError("EMAIL_PROVIDER must be either 'resend' or 'smtp'")
+            raise ValueError("EMAIL_PROVIDER must be one of: 'brevo', 'resend', 'smtp'")
 
     meta = {
         "subject": subject,
