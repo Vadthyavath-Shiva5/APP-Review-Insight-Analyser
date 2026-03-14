@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -293,7 +293,8 @@ export default function Page() {
           </button>
 
           <p className="hint">
-            On Vercel, week-range reprocessing requires a backend pipeline webhook (`PIPELINE_TRIGGER_URL`).
+            Email is sent via Brevo. Set BREVO_API_KEY and EMAIL_FROM_ADDRESS in Vercel. Reprocess uses backend
+            webhook: set PIPELINE_TRIGGER_URL and PIPELINE_TRIGGER_TOKEN in Vercel.
           </p>
 
           <div className="downloadCard">

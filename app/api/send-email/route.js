@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 
 import { readEmailDraftParts, resolveLatestAttachmentPaths } from "../../../lib/dashboard-data.js";
 
+// Email: Brevo (default), Resend, or SMTP. Set EMAIL_PROVIDER=brevo + BREVO_API_KEY + EMAIL_FROM_ADDRESS on Vercel.
 export const runtime = "nodejs";
 
 function validEmail(email) {
