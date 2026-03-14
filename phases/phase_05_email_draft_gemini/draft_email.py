@@ -1,11 +1,14 @@
 ﻿from __future__ import annotations
 
 import argparse
+import base64
 import json
 import os
 import re
 import shutil
 import smtplib
+import urllib.error
+import urllib.request
 from datetime import datetime
 from email.message import EmailMessage
 from pathlib import Path
@@ -170,6 +173,54 @@ def _smtp_send(msg: EmailMessage, host: str, port: int, username: str, password:
         server.send_message(msg)
 
 
+def _send_via_resend(
+    api_key: str,
+    from_email: str,
+    from_name: str,
+    to_email: str,
+    subject: str,
+    body_text: str,
+    body_html: str,
+    attachment_paths: list[Path],
+) -> str | None:
+    attachments = []
+    for path in attachment_paths:
+        if not path.exists():
+            raise FileNotFoundError(f"Attachment not found: {path}")
+        encoded = base64.b64encode(path.read_bytes()).decode("ascii")
+        attachments.append({"filename": path.name, "content": encoded})
+
+    payload = {
+        "from": f"{from_name} <{from_email}>",
+        "to": [to_email],
+        "subject": subject,
+        "text": body_text,
+        "html": body_html,
+        "attachments": attachments,
+    }
+
+    req = urllib.request.Request(
+        url="https://api.resend.com/emails",
+        data=json.dumps(payload).encode("utf-8"),
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            raw = resp.read().decode("utf-8", errors="replace")
+            parsed = json.loads(raw) if raw else {}
+            return parsed.get("id")
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"Resend API error {exc.code}: {detail}") from exc
+    except urllib.error.URLError as exc:
+        raise RuntimeError(f"Resend request failed: {exc.reason}") from exc
+
+
 def _as_bool(value: str | None, default: bool = True) -> bool:
     if value is None:
         return default
@@ -278,53 +329,85 @@ def run(
     output_path.write_text(draft, encoding="utf-8")
     print(f"Saved email draft to {output_path}")
 
-    from_email = os.getenv("SMTP_USERNAME", "").strip()
+    email_provider = os.getenv("EMAIL_PROVIDER", "resend").strip().lower()
     from_name = os.getenv("EMAIL_FROM_NAME", "Vadthyavath Shiva").strip() or "Vadthyavath Shiva"
+    from_email = (
+        os.getenv("EMAIL_FROM_ADDRESS", "").strip()
+        or os.getenv("RESEND_FROM_EMAIL", "").strip()
+        or os.getenv("SMTP_USERNAME", "").strip()
+    )
+
     smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
+    smtp_username = os.getenv("SMTP_USERNAME", "").strip()
     smtp_password = os.getenv("SMTP_PASSWORD", "").strip()
     smtp_use_tls = _as_bool(os.getenv("SMTP_USE_TLS", "true"), default=True)
 
+    resend_api_key = os.getenv("RESEND_API_KEY", "").strip()
+
     if dry_run:
         print("Dry run enabled. Email not sent.")
+        transport_used = "none"
+        transport_status = "dry_run"
     else:
-        missing = []
-        if not from_email:
-            missing.append("SMTP_USERNAME")
-        if not smtp_password:
-            missing.append("SMTP_PASSWORD")
         if not to_alias:
-            missing.append("EMAIL_TO_ALIAS / --to")
+            raise ValueError("Recipient email missing. Set EMAIL_TO_ALIAS or pass --to")
+        if not from_email:
+            raise ValueError("Sender email missing. Set EMAIL_FROM_ADDRESS or RESEND_FROM_EMAIL or SMTP_USERNAME")
 
-        if missing:
-            raise ValueError(
-                "Missing required SMTP/email settings for auto-send: " + ", ".join(missing)
+        if email_provider == "resend":
+            if not resend_api_key:
+                raise ValueError("RESEND_API_KEY is required when EMAIL_PROVIDER=resend")
+            message_id = _send_via_resend(
+                api_key=resend_api_key,
+                from_email=from_email,
+                from_name=from_name,
+                to_email=to_alias,
+                subject=subject,
+                body_text=body_text,
+                body_html=body_html,
+                attachment_paths=[dated_pdf, dated_csv],
             )
+            print(f"Email sent via Resend to {to_alias}. message_id={message_id}")
+            transport_used = "resend"
+            transport_status = "sent"
+        elif email_provider == "smtp":
+            missing = []
+            if not smtp_username:
+                missing.append("SMTP_USERNAME")
+            if not smtp_password:
+                missing.append("SMTP_PASSWORD")
+            if missing:
+                raise ValueError("Missing required SMTP settings: " + ", ".join(missing))
 
-        msg = _build_message(
-            from_email=from_email,
-            from_name=from_name,
-            to_email=to_alias,
-            subject=subject,
-            body_text=body_text,
-            body_html=body_html,
-            attachment_paths=[dated_pdf, dated_csv],
-        )
-        _smtp_send(
-            msg=msg,
-            host=smtp_host,
-            port=smtp_port,
-            username=from_email,
-            password=smtp_password,
-            use_tls=smtp_use_tls,
-        )
-        print(f"Email sent successfully to {to_alias}")
+            msg = _build_message(
+                from_email=from_email,
+                from_name=from_name,
+                to_email=to_alias,
+                subject=subject,
+                body_text=body_text,
+                body_html=body_html,
+                attachment_paths=[dated_pdf, dated_csv],
+            )
+            _smtp_send(
+                msg=msg,
+                host=smtp_host,
+                port=smtp_port,
+                username=smtp_username,
+                password=smtp_password,
+                use_tls=smtp_use_tls,
+            )
+            print(f"Email sent via SMTP to {to_alias}")
+            transport_used = "smtp"
+            transport_status = "sent"
+        else:
+            raise ValueError("EMAIL_PROVIDER must be either 'resend' or 'smtp'")
 
     meta = {
         "subject": subject,
         "week_end": week_end,
         "to": to_alias,
-        "from": os.getenv("SMTP_USERNAME", ""),
+        "from": from_email,
         "used_gemini": used_gemini,
         "model": model,
         "delivery_mode": delivery_mode,
@@ -332,6 +415,9 @@ def run(
         "attachments": [str(dated_pdf), str(dated_csv)],
         "app_link": app_link,
         "generation_mode": generation_mode,
+        "email_provider": email_provider,
+        "transport_used": transport_used,
+        "transport_status": transport_status,
     }
     meta_path = output_path.with_name("email_draft_meta.json")
     meta_path.write_text(json.dumps(meta, indent=2), encoding="utf-8")
@@ -374,6 +460,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-
-

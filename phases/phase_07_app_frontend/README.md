@@ -40,16 +40,17 @@ Purpose: provide a Next.js dashboard UI for themes, insights, review evidence, a
 
 ## Deploy on Vercel
 Set env vars in Vercel project settings:
-- `SMTP_HOST`
-- `SMTP_PORT`
-- `SMTP_USE_TLS`
-- `SMTP_USERNAME`
-- `SMTP_PASSWORD`
+- `EMAIL_PROVIDER` (`resend` recommended)
 - `EMAIL_FROM_NAME`
+- `EMAIL_FROM_ADDRESS`
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
 - `EMAIL_TO_ALIAS` (optional default)
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USE_TLS`, `SMTP_USERNAME`, `SMTP_PASSWORD` (only if EMAIL_PROVIDER=smtp)
 - `PIPELINE_TRIGGER_URL` (required for week-range reprocess on Vercel)
 - `PIPELINE_TRIGGER_TOKEN` (optional auth for webhook)
 
 ## Notes
 - The Python pipeline remains the processing engine for ingestion/grouping/note generation.
 - Next.js frontend is the Vercel-compatible presentation + trigger layer.
+

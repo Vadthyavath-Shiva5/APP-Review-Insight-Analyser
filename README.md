@@ -287,7 +287,7 @@ Planned upgrades for production deployment:
 
 - Weekly triggered mail uses only WEEKLY_SCHEDULED_RECIPIENT from .env.
 - Frontend-entered recipient emails are sent instantly and are not stored for weekly triggers.
-- Sender is fixed by SMTP config: SMTP_USERNAME=shivavadthyavath5@gmail.com.
+- Sender is configured by EMAIL_FROM_ADDRESS / RESEND_FROM_EMAIL and EMAIL_FROM_NAME.
 
 ## Weekly Schedule Setup (Monday 10:00)
 
@@ -310,8 +310,10 @@ Planned upgrades for production deployment:
   - `npm run dev`
 - Deploy to Vercel from repository root.
 - Required Vercel env vars:
-  - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USE_TLS`
-  - `SMTP_USERNAME`, `SMTP_PASSWORD`, `EMAIL_FROM_NAME`
+  - `EMAIL_PROVIDER` (`resend` recommended)
+  - `EMAIL_FROM_NAME`, `EMAIL_FROM_ADDRESS`
+  - `RESEND_API_KEY`, `RESEND_FROM_EMAIL` (when using Resend)
+  - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USE_TLS`, `SMTP_USERNAME`, `SMTP_PASSWORD` (only if EMAIL_PROVIDER=smtp)
   - `EMAIL_TO_ALIAS` (optional default recipient)
   - `PIPELINE_TRIGGER_URL` (required for week-range reprocess from Vercel frontend)
   - `PIPELINE_TRIGGER_TOKEN` (optional)
@@ -369,3 +371,4 @@ This enables the "Reprocess Selected Weeks and Send" button to trigger backend r
 - Do not commit `.env`.
 - Store all secrets only in Render, GitHub Secrets, and Vercel env vars.
 - Rotate any tokens/keys that were previously shared in chat.
+

@@ -34,6 +34,18 @@ Then call `POST /trigger` with:
 
 `Authorization: Bearer <PIPELINE_TRIGGER_TOKEN>`
 
+## Email Transport on Render
+
+Use HTTPS email API for Render free tier.
+Recommended:
+- `EMAIL_PROVIDER=resend`
+- `RESEND_API_KEY=...`
+- `RESEND_FROM_EMAIL=verified@yourdomain.com`
+- `EMAIL_FROM_NAME=Groww Pulse Bot`
+- `EMAIL_FROM_ADDRESS=verified@yourdomain.com`
+
+SMTP is optional fallback (`EMAIL_PROVIDER=smtp`) but may fail on Render free due to outbound SMTP restrictions.
+
 ## Run Locally
 
 - `pip install -r requirements.txt`

@@ -1,6 +1,6 @@
 ﻿# Phase 05 - LLM Email Draft And Auto-Send
 
-Purpose: generate and send a weekly insights email with strict LLM-only body generation.
+Purpose: generate and send a weekly insights email with LLM-first body generation.
 
 Inputs:
 - `data/outputs/weekly_note.md`
@@ -16,10 +16,11 @@ Outputs:
 
 Email behavior:
 - Subject format: `Weekly Review Insights - GROWW | <week_end_date>`
-- Body generation mode: `strict_llm_only`
-- LLM returns both `plain_body` and `html_body` in JSON
-- No manual fallback formatting path
-- Sends multipart email (HTML + plain text)
+- Body generation mode:
+  - preferred: `strict_llm_only` (Gemini)
+  - fallback: `fallback_template` when Gemini quota/errors occur
+- LLM returns both `plain_body` and `html_body` in JSON.
+- Sends multipart email with attachments.
 
 Recipient modes:
 - `manual_cli`: direct send from CLI
@@ -27,14 +28,25 @@ Recipient modes:
 - `instant_frontend`: immediate send for frontend-entered recipient
 
 Required env for auto-send:
-- `GEMINI_API_KEY` (mandatory)
-- `SMTP_HOST` (default: `smtp.gmail.com`)
-- `SMTP_PORT` (default: `587`)
-- `SMTP_USE_TLS` (default: `true`)
-- `SMTP_USERNAME`
-- `SMTP_PASSWORD` (App Password for Gmail)
-- `EMAIL_FROM_NAME` (default: `Vadthyavath Shiva`)
+- `EMAIL_PROVIDER` (`resend` recommended, or `smtp`)
+- `EMAIL_FROM_NAME`
+- `EMAIL_FROM_ADDRESS` (or `RESEND_FROM_EMAIL` / `SMTP_USERNAME`)
 - `PHASE7_APP_LINK`
+
+For Resend (recommended on Render free tier):
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
+
+For SMTP fallback:
+- `SMTP_HOST`
+- `SMTP_PORT`
+- `SMTP_USE_TLS`
+- `SMTP_USERNAME`
+- `SMTP_PASSWORD`
+
+Optional for LLM body generation:
+- `GEMINI_API_KEY`
+- `GEMINI_MODEL`
 
 Run:
 - Auto-send:
@@ -43,5 +55,5 @@ Run:
   - `python phases/phase_05_email_draft_gemini/draft_email.py --to your_alias@example.com --delivery-mode manual_cli --dry-run`
 
 Notes:
-- If LLM output is invalid JSON or missing required sections, the script raises an error.
-- Frontend send option is available in `phases/phase_07_app_frontend/app.py`.
+- If Gemini output fails, script falls back to a template body and still attempts send.
+- Frontend send option is available in `app/api/send-email/route.js`.
