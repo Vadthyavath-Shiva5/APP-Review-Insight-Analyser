@@ -292,7 +292,7 @@ def main() -> None:
     parser.add_argument("--pdf-path", default="data/outputs/weekly_note.pdf")
     parser.add_argument("--csv-path", default="data/processed/reviews_15w_redacted.csv")
     parser.add_argument("--attachments-output-dir", default="data/outputs")
-    parser.add_argument("--app-link", default=os.getenv("PHASE7_APP_LINK", "[Dashboard link to be added in Phase 7]"))
+    parser.add_argument("--app-link", default=os.getenv("PHASE7_APP_LINK", "https://groww-review-insight-analyser.vercel.app"))
     parser.add_argument("--model", default=os.getenv("GEMINI_MODEL", "gemini-2.5-flash-lite"))
     parser.add_argument(
         "--delivery-mode",
@@ -319,3 +319,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

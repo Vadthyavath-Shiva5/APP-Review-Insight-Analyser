@@ -155,7 +155,7 @@ def _send_current_email(recipient: str, dry_run: bool) -> None:
         pdf_path=DEFAULT_PDF_PATH,
         csv_path=DEFAULT_CSV_PATH,
         attachments_output_dir=DEFAULT_ATTACHMENTS_DIR,
-        app_link=os.getenv("PHASE7_APP_LINK", "[Dashboard link to be added in Phase 7]"),
+        app_link=os.getenv("PHASE7_APP_LINK", "https://groww-review-insight-analyser.vercel.app"),
         model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash-lite"),
         delivery_mode="instant_frontend",
         dry_run=dry_run,
@@ -277,3 +277,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
