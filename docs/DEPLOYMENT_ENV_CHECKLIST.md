@@ -2,6 +2,11 @@
 
 Use this after deploying the Brevo (HTTPS email API) changes. No SMTP is used; everything uses HTTPS so Render free tier works.
 
+**Redeploy frontend (Vercel):** After pushing to GitHub, Vercel usually auto-deploys. If the live site still shows the old “resend or smtp” error:
+
+1. **Redeploy with cache clear:** Vercel Dashboard → your project → Deployments → ⋮ on latest → **Redeploy** → **uncheck** “Use existing Build Cache” → Redeploy.
+2. **If the error still appears – fresh deploy:** Vercel Dashboard → your project → Settings → scroll down → **Delete Project**. Then create a new project: **Add New** → **Project** → Import `Vadthyavath-Shiva5/APP-Review-Insight-Analyser` from GitHub → leave framework/build settings as auto → add Environment Variables (BREVO_API_KEY, EMAIL_FROM_ADDRESS, PIPELINE_TRIGGER_URL, PIPELINE_TRIGGER_TOKEN) → Deploy. Your app URL may change unless you use the same project name.
+
 ---
 
 ## 1. Vercel (frontend)
