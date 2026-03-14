@@ -60,7 +60,7 @@ jobs:
           if [ -z "$WEEKS_TO" ]; then WEEKS_TO="15"; fi
           if [ -z "$EMAIL_DRY_RUN" ]; then EMAIL_DRY_RUN="false"; fi
 
-          PAYLOAD=$(jq -n \
+          PAYLOAD=$(jq -cn \
             --arg appId "com.nextbillion.groww" \
             --argjson weeksFrom "$WEEKS_FROM" \
             --argjson weeksTo "$WEEKS_TO" \
@@ -74,7 +74,7 @@ jobs:
               emailDryRun: $emailDryRun
             } + (if $recipientEmail == "" then {} else {recipientEmail: $recipientEmail} end)')
 
-          echo "payload=$PAYLOAD" >> "$GITHUB_OUTPUT"
+          printf 'payload=%s\n' "$PAYLOAD" >> "$GITHUB_OUTPUT"
 
       - name: Trigger backend endpoint
         env:
@@ -99,3 +99,4 @@ jobs:
             echo "Trigger failed." >&2
             exit 1
           fi
+
