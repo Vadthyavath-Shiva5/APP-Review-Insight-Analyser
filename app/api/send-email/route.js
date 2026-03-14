@@ -147,7 +147,8 @@ export async function POST(req) {
       return NextResponse.json({ ok: false, error: "Valid recipient email is required." }, { status: 400 });
     }
 
-    const emailProvider = String(process.env.EMAIL_PROVIDER || "brevo").toLowerCase();
+    const rawProvider = (process.env.EMAIL_PROVIDER || "brevo").trim().toLowerCase();
+    const emailProvider = rawProvider === "resend" || rawProvider === "smtp" ? rawProvider : "brevo";
     const fromName = process.env.EMAIL_FROM_NAME || "GROWW Pulse Bot";
     const fromEmail =
       process.env.EMAIL_FROM_ADDRESS ||
@@ -158,12 +159,26 @@ export async function POST(req) {
 
     if (!fromEmail) {
       return NextResponse.json(
-        { ok: false, error: "Set EMAIL_FROM_ADDRESS or RESEND_FROM_EMAIL or BREVO_FROM_EMAIL or SMTP_USERNAME." },
+        {
+          ok: false,
+          error:
+            "Sender email not set. In Vercel: set EMAIL_FROM_ADDRESS (e.g. your verified Brevo sender email).",
+        },
         { status: 400 },
       );
     }
 
     const { subject, body } = await readEmailDraftParts();
+    if (!body || body.includes("No draft found. Please run pipeline first.")) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error:
+            "No email draft found. Generate the report first: use “Reprocess and Send” with a week range (backend runs the pipeline), or run the pipeline on Render. Then try Send Current again.",
+        },
+        { status: 400 },
+      );
+    }
     const bodyHtml = renderHtmlBody(body);
     const { pdfPath, csvPath, pdfName, csvName } = await resolveLatestAttachmentPaths();
 
@@ -172,9 +187,16 @@ export async function POST(req) {
     if (csvPath && csvName) attachments.push({ filename: csvName, path: csvPath });
 
     if (emailProvider === "brevo") {
-      const brevoApiKey = process.env.BREVO_API_KEY || "";
+      const brevoApiKey = (process.env.BREVO_API_KEY || "").trim();
       if (!brevoApiKey) {
-        return NextResponse.json({ ok: false, error: "BREVO_API_KEY must be configured." }, { status: 400 });
+        return NextResponse.json(
+          {
+            ok: false,
+            error:
+              "Brevo is not configured. In Vercel Environment Variables set: EMAIL_PROVIDER=brevo, BREVO_API_KEY (your Brevo API key), and EMAIL_FROM_ADDRESS (verified sender). Then redeploy.",
+          },
+          { status: 400 },
+        );
       }
 
       const brevoResult = await sendViaBrevo({
@@ -259,13 +281,15 @@ export async function POST(req) {
     }
 
     return NextResponse.json(
-      { ok: false, error: "EMAIL_PROVIDER must be one of: 'brevo', 'resend', 'smtp'." },
+      {
+        ok: false,
+        error:
+          "To send via Brevo, set in Vercel Environment Variables: EMAIL_PROVIDER=brevo, BREVO_API_KEY, EMAIL_FROM_ADDRESS. Then redeploy.",
+      },
       { status: 400 },
     );
   } catch (error) {
-    return NextResponse.json(
-      { ok: false, error: error instanceof Error ? error.message : "Failed to send email" },
-      { status: 500 },
-    );
+    const message = error instanceof Error ? error.message : "Failed to send email";
+    return NextResponse.json({ ok: false, error: message }, { status: 500 });
   }
 }

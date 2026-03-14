@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
@@ -37,15 +37,15 @@ export async function POST(req) {
       );
     }
 
-    const triggerUrl = process.env.PIPELINE_TRIGGER_URL || "";
-    const triggerToken = process.env.PIPELINE_TRIGGER_TOKEN || "";
+    const triggerUrl = (process.env.PIPELINE_TRIGGER_URL || "").trim();
+    const triggerToken = (process.env.PIPELINE_TRIGGER_TOKEN || "").trim();
 
     if (!triggerUrl) {
       return NextResponse.json(
         {
           ok: false,
           error:
-            "PIPELINE_TRIGGER_URL is not configured. On Vercel, use an external backend job endpoint to reprocess and send.",
+            "Backend trigger not configured. In Vercel Environment Variables add: PIPELINE_TRIGGER_URL (e.g. https://your-app.onrender.com/trigger) and PIPELINE_TRIGGER_TOKEN (same as on Render). Save and redeploy.",
         },
         { status: 501 },
       );
@@ -76,10 +76,17 @@ export async function POST(req) {
     }
 
     if (!response.ok) {
+      const backendError = resultJson?.error || resultJson?.raw || resultText || "No response body";
+      const hint =
+        response.status === 401
+          ? " Check that PIPELINE_TRIGGER_TOKEN in Vercel matches the token set in Render."
+          : response.status === 404
+            ? " Check that PIPELINE_TRIGGER_URL ends with /trigger and your Render service is running."
+            : "";
       return NextResponse.json(
         {
           ok: false,
-          error: "Backend reprocess call failed.",
+          error: `Backend trigger failed (${response.status}): ${backendError}.${hint}`,
           details: resultJson,
         },
         { status: 502 },
