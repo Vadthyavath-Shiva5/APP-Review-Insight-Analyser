@@ -282,3 +282,30 @@ input {
   border-color: var(--brand);
   background: var(--brand-soft);
 }
+
+.timelineCard {
+  margin-top: 10px;
+  margin-bottom: 6px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f7faf6;
+}
+
+.timelineTitle {
+  margin: 0 0 8px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 15px;
+}
+
+.timelineList {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.timelineList li {
+  margin-bottom: 4px;
+}

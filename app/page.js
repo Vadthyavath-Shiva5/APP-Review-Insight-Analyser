@@ -267,6 +267,18 @@ export default function Page() {
           <p className="hint">Selected range span: {selectedWeekSpan ?? "-"} week(s).</p>
           <p className="hint">Reprocess requires at least {MIN_REPROCESS_WEEKS} weeks.</p>
 
+          <div className="timelineCard">
+            <h4 className="timelineTitle">Processing Timelines</h4>
+            <ul className="timelineList">
+              <li>Request acceptance: 2-10 seconds.</li>
+              <li>1-6 selected weeks: 2-4 minutes.</li>
+              <li>7-10 selected weeks: 3-6 minutes.</li>
+              <li>11-15 selected weeks: 4-8 minutes.</li>
+              <li>Peak delays (cold start or API latency): up to 10-12 minutes.</li>
+            </ul>
+            <p className="hint">Please check your email after the expected timeline.</p>
+          </div>
+
           <button type="button" className="btn" onClick={handleSendCurrent} disabled={busySend || busyReprocess}>
             {busySend ? "Sending..." : "Send Current Generated Email"}
           </button>
@@ -308,3 +320,4 @@ export default function Page() {
     </main>
   );
 }
+
